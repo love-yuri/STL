@@ -2,6 +2,7 @@
 #define LIST_H
 
 #include "allocator.hpp"
+#include "yuri_log.hpp"
 
 namespace yuriSTL {
 
@@ -105,21 +106,20 @@ public:
 	// 展示数据
 	void showAllValue() {
 		node<T>* new_head = head;
-		std::cout << "当前容量 -> " << size << std::endl;
+		yinfo << "当前容量 -> " << size;
 		while (new_head->data_) {
 			if (new_head->next_->data_ == nullptr) {
-				std::cout << "tail : " << *new_head->data_ << "\n";
+				yinfo << "tail : " << *new_head->data_;
 				break;
 			}
 			if (new_head->front_ == nullptr) {
-				std::cout << "head : " << *new_head->data_ << "\n";
+				yinfo << "head : " << *new_head->data_ ;
 			} else {
-				std::cout << " front : " << *new_head->front_->data_ << "  prev : "
-				          << *new_head->data_ << "\n";
+				yinfo << " front : " << *new_head->front_->data_ << "  prev : "<< *new_head->data_;
 			}
 			new_head = new_head->next_;
 		}
-		std::cout << std::endl;
+		yinfo << "";
 	}
 };
 } // namespace yuriSTL

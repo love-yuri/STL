@@ -1,18 +1,30 @@
+/*
+ * @Author: love-yuri yuri2078170658@gmail.com
+ * @Date: 2024-12-30 13:41:33
+ * @LastEditTime: 2024-12-30 14:28:59
+ * @Description: stl基础库
+ */
 
 #ifndef BASE_H
 #define BASE_H
 
 #include "type_traits.hpp"
-#include <iostream>
 /*
-    这里实现了部分std 下的库函数
-    std::move 将值转换成右值引用
-    std::foward 完美转发
-    std::remove_reference 移除引用
-    std::is_lvalue_reference 判断是不是左值引用
+  这里实现了部分std 下的库函数
+  std::move 将值转换成右值引用
+  std::foward 完美转发
+  std::remove_reference 移除引用
+  std::is_lvalue_reference 判断是不是左值引用
 */
 
 namespace yuriSTL {
+
+enum ErrorCode {
+	SUCCESS = 0,
+	BAD_ALLOC = 1,    // 内存分配失败
+	OUT_OF_RANGE = 2, // 越界
+	STL_EMPTY = 3, // 元素为空
+};
 
 typedef __SIZE_TYPE__ size_type; // 数据类型重新定义
 
@@ -83,19 +95,5 @@ void destroy(T* start, T* end) {
 	// 通过另一个函数完成最终析构
 	destroy__(start, end, type);
 }
-
-// 打印日志函数，红色字体
-template <typename T>
-void log(T&& val) {
-	std::cout << "\e[31m" << val << "\e[0m\n";
-}
-
-// 打印日志函数，红色字体
-template <typename T, typename... Args>
-void log(T&& val, Args... args) {
-	std::cout << "\e[31m" << val << "\e[0m";
-	log(args...);
-}
-
 } // namespace yuriSTL
 #endif // BASE_H

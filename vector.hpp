@@ -4,6 +4,8 @@
 
 #include "allocator.hpp"
 #include "base.hpp"
+#include "yuri_log.hpp"
+
 namespace yuriSTL {
 
 template <typename T, typename Alloc = Allocator<T>>
@@ -18,18 +20,18 @@ private:
 	value_type* begin_; // 指向一块内存的起始地址
 	value_type* end_;   // 最后一个元素的下一个位置
 	value_type* tail_;  // 内存块的最后一块地址
-	Alloc alloc; // 新建分配内存的工具
+	Allocator<T> alloc; // 新建分配内存的工具
 
 	// 申请更大空间函数，默认为原来最大空间的两倍
 	void relloc() {
-		log("扩容!");
+		yinfo << "重新分配内存";
 		// 保存原来的元素个数
 		const int size = this->size();
 		// 申请两倍的空间
 		value_type* new_begin = alloc.allocate(size * 2);
 		if (new_begin == nullptr) {
-			yuriSTL::log("重新分配内存失败!");
-			exit(1);
+			yerror << "重新分配内存失败!";
+			exit(ErrorCode::BAD_ALLOC);
 		}
 		// 设置他新的end 和 tail 指针
 		value_type* new_end = new_begin + size;
@@ -49,15 +51,21 @@ private:
 		tail_ = new_tail;
 	}
 
+	// 申请指定空间函数
+	value_type * applyMemory(size_t size) noexcept {
+		const auto v = alloc.allocate(16);
+		// 异常返回
+		if (v == nullptr) {
+			yerror << "内存分配失败捏!";
+			exit(1);
+		}
+		return v;
+	}
+
 public:
 	vector() noexcept {
 		// 申请内存
-		begin_ = alloc.allocate(16);
-		// 异常返回
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
+		begin_ = applyMemory(16);
 		// 更新指针位置
 		end_ = begin_; // 没有元素，此时end = begin
 		tail_ = begin_ + 16;
@@ -66,12 +74,7 @@ public:
 	// 拷贝构造函数
 	vector(vector<value_type>& v) noexcept {
 		// 新建一块和他一样大的内存
-		begin_ = alloc.allocate(v.max_size());
-		// 异常返回
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
+		begin_ = applyMemory(v.max_size());
 		// 更新指针区域
 		const int size = v.size();
 		end_ = begin_ + size;
@@ -98,12 +101,7 @@ public:
 	// 使用n个对象初始化
 	explicit vector(const size_type n) {
 		// 申请空间
-		begin_ = alloc.allocate(n);
-		// 异常返回
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
+		begin_ = applyMemory(n);
 		// 初始化内容
 		for (int i = 0; i < n; i++) {
 			alloc.construct(begin_ + i);
@@ -116,12 +114,7 @@ public:
 	// 初始化n个元素
 	vector(const size_type n, const_reference val) {
 		// 申请空间
-		begin_ = alloc.allocate(n);
-		// 异常返回
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
+		begin_ = applyMemory(n);
 		// 更新指针
 		end_ = begin_ + n;
 		tail_ = begin_ + n;
@@ -177,8 +170,8 @@ public:
 	// 重载[] 返回对应下标元素
 	reference operator[](int k) {
 		if (k >= end_ - begin_) {
-			yuriSTL::log("错误！超出内存范围!");
-			exit(2);
+			yerror << "错误！超出内存范围!";
+			exit(ErrorCode::OUT_OF_RANGE);
 		}
 		return *(begin_ + k);
 	}
@@ -186,8 +179,8 @@ public:
 	// 返回对应元素个数
 	reference at(const int k) {
 		if (k >= end_ - begin_) {
-			yuriSTL::log("错误！超出内存范围!");
-			exit(2);
+			yerror << "错误！超出内存范围!";
+			exit(ErrorCode::OUT_OF_RANGE);
 		}
 		return *(begin_ + k);
 	}
@@ -195,8 +188,8 @@ public:
 	// 返回首部元素
 	reference front() {
 		if (empty()) {
-			yuriSTL::log("当前元素为空!");
-			exit(3);
+			yerror << "当前元素为空!";
+			exit(ErrorCode::STL_EMPTY);
 		}
 		return *begin_;
 	}
@@ -204,8 +197,8 @@ public:
 	// 返回末尾元素
 	reference back() {
 		if (empty()) {
-			yuriSTL::log("当前元素为空!");
-			exit(3);
+			yerror << "当前元素为空!";
+			exit(ErrorCode::STL_EMPTY);
 		}
 		return *(end_ - 1);
 	}
@@ -228,12 +221,7 @@ public:
 		// 删除掉之前申请的内存
 		alloc.deallocate(begin_);
 		// 重新申请内存
-		begin_ = alloc.allocate(v.max_size());
-		// 判断是否异常
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
+		begin_ = applyMemory(v.max_size());
 		// 更新指针
 		end_ = begin_ + v.size();
 		tail_ = begin_ + v.max_size();

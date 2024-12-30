@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2024-12-30 14:14:17
+ * @LastEditTime: 2024-12-30 14:37:54
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -118,20 +118,6 @@ public:
 		return *this;
 	}
 };
-
-template <typename T>
-std::ostringstream& operator<<(std::ostringstream& os, const std::vector<int>& vec) {
-	os << "[";
-	for (size_t i = 0; i < vec.size(); i++) {
-		os << vec[i];
-		if (i != vec.size() - 1) {
-			os << ", ";
-		}
-	}
-	os << "]";
-	return os;
-}
-
 } // namespace yuri
 
 #ifndef yinfo
