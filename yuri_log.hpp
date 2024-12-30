@@ -1,12 +1,14 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2024-12-30 14:37:54
+ * @LastEditTime: 2024-12-30 15:41:53
  * @Description: 日志库基于c11，可写入文件
  */
 
 #ifndef YURI_LOG_HPP
 #define YURI_LOG_HPP
+
+#pragma once
 
 #include <ctime>
 #include <fstream>
@@ -31,7 +33,7 @@ static void logResult(const std::string& msg, std::ostream& ostream) {
 }
 
 /* 将日志结果设置为写入文件 */
-static void setWriteInFile() {
+[[maybe_unused]] static void setWriteInFile() {
 	write_in_file = true;
 }
 
