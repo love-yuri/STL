@@ -4,6 +4,7 @@
 
 #include "allocator.hpp"
 #include "base.hpp"
+#include "exception.hpp"
 #include "yuri_log.hpp"
 
 namespace yuriSTL {
@@ -24,9 +25,9 @@ private:
 
 	// 申请更大空间函数，默认为原来最大空间的两倍
 	void relloc() {
-		yinfo << "重新分配内存";
 		// 保存原来的元素个数
 		const int size = this->size();
+		yinfo << "重新分配内存, 当前size ->  " << size;
 		// 申请两倍的空间
 		value_type* new_begin = applyMemory(size * 2);
 		// 设置他新的end 和 tail 指针
@@ -48,12 +49,11 @@ private:
 	}
 
 	// 申请指定空间函数
-	value_type * applyMemory(const size_t&& size) noexcept {
+	value_type * applyMemory(const size_t&& size) {
 		const auto v = alloc.allocate(size);
 		// 异常返回
 		if (v == nullptr) {
-			yerror << "内存分配失败捏!";
-			exit(1);
+			throw BizException("内存分配失败捏!");
 		}
 		return v;
 	}
@@ -171,8 +171,7 @@ public:
 	// 返回对应元素个数
 	reference at(const int k) {
 		if (k >= end_ - begin_) {
-			yerror << "错误！超出内存范围!";
-			exit(ErrorCode::OUT_OF_RANGE);
+			throw BizException("错误, 超出下标访问范围!");
 		}
 		return *(begin_ + k);
 	}
@@ -180,8 +179,7 @@ public:
 	// 返回首部元素
 	reference front() {
 		if (empty()) {
-			yerror << "当前元素为空!";
-			exit(ErrorCode::STL_EMPTY);
+			throw BizException("当前容器为空!!!");
 		}
 		return *begin_;
 	}
@@ -189,8 +187,7 @@ public:
 	// 返回末尾元素
 	reference back() {
 		if (empty()) {
-			yerror << "当前元素为空!";
-			exit(ErrorCode::STL_EMPTY);
+			throw BizException("当前容器为空!!!");
 		}
 		return *(end_ - 1);
 	}
