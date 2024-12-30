@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-12-30 13:41:33
- * @LastEditTime: 2024-12-30 14:28:59
+ * @LastEditTime: 2024-12-30 15:14:57
  * @Description: stl基础库
  */
 
@@ -23,7 +23,7 @@ enum ErrorCode {
 	SUCCESS = 0,
 	BAD_ALLOC = 1,    // 内存分配失败
 	OUT_OF_RANGE = 2, // 越界
-	STL_EMPTY = 3, // 元素为空
+	STL_EMPTY = 3,    // 元素为空
 };
 
 typedef __SIZE_TYPE__ size_type; // 数据类型重新定义
@@ -63,8 +63,9 @@ constexpr T&& forward(typename remove_reference<T>::__type& val) noexcept {
 template <typename T>
 constexpr T&& forward(typename remove_reference<T>::__type&& val) noexcept {
 	// 静态断言 如果传入的是个左值就报错
-	static_assert(!is_lvalue_reference<T>().value,
-	              "不能用forward将一个左值转换成右值");
+	// 防止显示指定 forward<int&>(2) 如果显示指定为左值就会报错, 不能将左值转为右值
+	// static_assert检查，如果第一个参数为false，则编译失败
+	static_assert(!is_lvalue_reference<T>::value, "不能用forward将一个左值转换成右值");
 	return static_cast<T&&>(val);
 }
 

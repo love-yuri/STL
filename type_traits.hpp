@@ -19,30 +19,34 @@ namespace yuriSTL {
 // 传入 int && 生成第三个 T -> int
 template <typename T>
 struct remove_reference {
-	typedef T __type;
+	using __type = T;
 };
 
 template <typename T>
 struct remove_reference<T&> {
-	typedef T __type;
+	using __type = T;
 };
 
 template <typename T>
 struct remove_reference<T&&> {
-	typedef T __type;
+	using __type = T;
 };
+
+template <bool T>
+struct bool_constant {
+	static constexpr bool value = T;
+};
+
+using true_type = bool_constant<true>;
+using false_type = bool_constant<false>;
 
 // b不是左值引用value 为false
 template <typename T>
-struct is_lvalue_reference {
-	bool value = false;
-};
+struct is_lvalue_reference : false_type {};
 
 // 是左值引用value 为true
 template <typename T>
-struct is_lvalue_reference<T&> {
-	bool value = true;
-};
+struct is_lvalue_reference<T&> : true_type {};
 
 // b不是右值引用value 为false
 template <typename T>
