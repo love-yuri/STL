@@ -2,29 +2,26 @@
 #define VECTOR_H
 // 自己写的vector容器
 
-#include "allocator.h" 
+#include "allocator.h"
 #include "base.h"
 namespace yuriSTL {
 
 template <typename T>
-class vector final
-{
+class vector final {
 public:
-	typedef T value_type; // 数据类型别名
-	typedef T* iterator;  // 指针类型 / 迭代器
-	typedef T& reference; // 引用 只接受左值引用
-	typedef const T& const_reference ; // 引用 接受左值也接受右值
+	typedef T value_type;             // 数据类型别名
+	typedef T* iterator;              // 指针类型 / 迭代器
+	typedef T& reference;             // 引用 只接受左值引用
+	typedef const T& const_reference; // 引用 接受左值也接受右值
 
 private:
-	friend std::ostream& operator<<(std::ostream& cout, const_reference vec);
 	value_type* begin_; // 指向一块内存的起始地址
-	value_type* end_; // 最后一个元素的下一个位置
-	value_type* tail_; // 内存块的最后一块地址
+	value_type* end_;   // 最后一个元素的下一个位置
+	value_type* tail_;  // 内存块的最后一块地址
 	allocator<T> alloc; // 新建分配内存的工具
-	
+
 	// 申请更大空间函数，默认为原来最大空间的两倍
-	void relloc()
-	{
+	void relloc() {
 		log("扩容!");
 		// 保存原来的元素个数
 		const int size = this->size();
@@ -50,13 +47,12 @@ private:
 		begin_ = new_begin;
 		end_ = new_end;
 		tail_ = new_tail;
-    }
+	}
 
 public:
-	vector() noexcept
-	{
+	vector() noexcept {
 		// 申请内存
-		begin_ = alloc.allocate(16); 
+		begin_ = alloc.allocate(16);
 		// 异常返回
 		if (begin_ == nullptr) {
 			yuriSTL::log("内存分配失败捏!");
@@ -64,12 +60,11 @@ public:
 		}
 		// 更新指针位置
 		end_ = begin_; // 没有元素，此时end = begin
-		tail_ = begin_ + 16; 
+		tail_ = begin_ + 16;
 	}
-	
+
 	// 拷贝构造函数
-	vector(vector<value_type> &v) noexcept
-	{
+	vector(vector<value_type>& v) noexcept {
 		// 新建一块和他一样大的内存
 		begin_ = alloc.allocate(v.max_size());
 		// 异常返回
@@ -88,8 +83,7 @@ public:
 	}
 
 	// 移动构造函数
-	vector(vector<value_type> &&v) noexcept
-	{
+	vector(vector<value_type>&& v) noexcept {
 		// 移动资源
 		begin_ = v.begin_;
 		end_ = v.end_;
@@ -102,8 +96,7 @@ public:
 	}
 
 	// 使用n个对象初始化
-	explicit vector(const size_type n)
-	{
+	explicit vector(const size_type n) {
 		// 申请空间
 		begin_ = alloc.allocate(n);
 		// 异常返回
@@ -121,8 +114,7 @@ public:
 	}
 
 	// 初始化n个元素
-	vector(const size_type n, const_reference val)
-	{
+	vector(const size_type n, const_reference val) {
 		// 申请空间
 		begin_ = alloc.allocate(n);
 		// 异常返回
@@ -139,10 +131,8 @@ public:
 		}
 	}
 
-
 	// 析构函数
-	~vector() 
-	{
+	~vector() {
 		// 调用函数对类进行析构
 		alloc.destroy(begin_, end_);
 		// 删除掉申请的内存
@@ -155,8 +145,7 @@ public:
 
 	// 从尾部插入元素 左值
 	// 使用const & 既可以接受左值也可以接受右值
-	void push_back(const_reference val)
-	{
+	void push_back(const_reference val) {
 		// 判断空间是不是满了
 		if (end_ == tail_) {
 			relloc();
@@ -166,8 +155,7 @@ public:
 	}
 
 	// 从尾部插入元素 右值
-	void push_back(value_type&& val)
-	{
+	void push_back(value_type&& val) {
 		// 判断空间是不是满了
 		if (end_ == tail_) {
 			relloc(); // 如果空间满了则重新分配空间默认 大小 X 2
@@ -177,38 +165,35 @@ public:
 	}
 
 	// 返回当前元素个数
-    const int size() {
-        return end_ - begin_;
-    }
-
-	// 返回最大元素个数
-    const int max_size() {
-        return tail_ - begin_;
-    }
-
-	// 重载[] 返回对应下标元素
-	reference operator[](int k)
-	{
-        if (k >= end_ - begin_) {
-			yuriSTL::log("错误！超出内存范围!");
-			exit(2);
-        }
-        return *(begin_ + k);
+	const int size() {
+		return end_ - begin_;
 	}
 
-	// 返回对应元素个数
-	reference at(const int k)
-	{
+	// 返回最大元素个数
+	const int max_size() {
+		return tail_ - begin_;
+	}
+
+	// 重载[] 返回对应下标元素
+	reference operator[](int k) {
 		if (k >= end_ - begin_) {
 			yuriSTL::log("错误！超出内存范围!");
 			exit(2);
 		}
-        return *(begin_ + k);
+		return *(begin_ + k);
+	}
+
+	// 返回对应元素个数
+	reference at(const int k) {
+		if (k >= end_ - begin_) {
+			yuriSTL::log("错误！超出内存范围!");
+			exit(2);
+		}
+		return *(begin_ + k);
 	}
 
 	// 返回首部元素
-	reference front() 
-	{
+	reference front() {
 		if (empty()) {
 			yuriSTL::log("当前元素为空!");
 			exit(3);
@@ -217,8 +202,7 @@ public:
 	}
 
 	// 返回末尾元素
-	reference back()
-	{
+	reference back() {
 		if (empty()) {
 			yuriSTL::log("当前元素为空!");
 			exit(3);
@@ -238,8 +222,7 @@ public:
 	iterator data() noexcept { return begin_; }
 
 	// 重载等号
-	reference operator=(const vector<value_type> &v)
-	{
+	reference operator=(const vector<value_type>& v) {
 		// 调用函数对之前的数据进行析构
 		alloc.destroy(begin_, end_);
 		// 删除掉之前申请的内存
@@ -247,7 +230,7 @@ public:
 		// 重新申请内存
 		begin_ = alloc.allocate(v.max_size());
 		// 判断是否异常
-        if (begin_ == nullptr) {
+		if (begin_ == nullptr) {
 			yuriSTL::log("内存分配失败捏!");
 			exit(1);
 		}
@@ -265,8 +248,7 @@ public:
 
 // 重载输出，方便打印
 template <typename T>
-std::ostream& operator<<(std::ostream& cout, vector<T>& vec)
-{
+std::ostream& operator<<(std::ostream& cout, vector<T>& vec) {
 	const int size = vec.size();
 	for (int i = 0; i < size; i++) {
 		cout << vec[i] << " ";
@@ -276,5 +258,4 @@ std::ostream& operator<<(std::ostream& cout, vector<T>& vec)
 }
 
 } // namespace yuriSTL
-
 #endif
