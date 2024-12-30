@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2024-12-30 15:41:53
+ * @LastEditTime: 2024-12-30 16:39:47
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -95,6 +95,12 @@ public:
 	template <typename T>
 	Log& operator<<(T val) {
 		ost << val;
+		return *this;
+	}
+
+	template <>
+	Log& operator<<(bool val) {
+		ost << std::boolalpha << val;
 		return *this;
 	}
 
