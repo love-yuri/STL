@@ -28,11 +28,7 @@ private:
 		// 保存原来的元素个数
 		const int size = this->size();
 		// 申请两倍的空间
-		value_type* new_begin = alloc.allocate(size * 2);
-		if (new_begin == nullptr) {
-			yerror << "重新分配内存失败!";
-			exit(ErrorCode::BAD_ALLOC);
-		}
+		value_type* new_begin = applyMemory(size * 2);
 		// 设置他新的end 和 tail 指针
 		value_type* new_end = new_begin + size;
 		value_type* new_tail = new_begin + size * 2;
@@ -52,8 +48,8 @@ private:
 	}
 
 	// 申请指定空间函数
-	value_type * applyMemory(size_t size) noexcept {
-		const auto v = alloc.allocate(16);
+	value_type * applyMemory(const size_t&& size) noexcept {
+		const auto v = alloc.allocate(size);
 		// 异常返回
 		if (v == nullptr) {
 			yerror << "内存分配失败捏!";
@@ -158,21 +154,17 @@ public:
 	}
 
 	// 返回当前元素个数
-	const int size() {
+	const int size() const {
 		return end_ - begin_;
 	}
 
 	// 返回最大元素个数
-	const int max_size() {
+	const int capacity() const {
 		return tail_ - begin_;
 	}
 
 	// 重载[] 返回对应下标元素
 	reference operator[](int k) {
-		if (k >= end_ - begin_) {
-			yerror << "错误！超出内存范围!";
-			exit(ErrorCode::OUT_OF_RANGE);
-		}
 		return *(begin_ + k);
 	}
 
@@ -236,13 +228,12 @@ public:
 
 // 重载输出，方便打印
 template <typename T>
-std::ostream& operator<<(std::ostream& cout, vector<T>& vec) {
+void operator<<(yuri::Log log, yuriSTL::vector<T>& vec) {
 	const int size = vec.size();
 	for (int i = 0; i < size; i++) {
-		cout << vec[i] << " ";
+		log << vec[i] << " ";
 	}
-	cout << std::endl;
-	return cout;
+	log << "";
 }
 
 } // namespace yuriSTL
