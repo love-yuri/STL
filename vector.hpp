@@ -2,8 +2,8 @@
 #define VECTOR_H
 // 自己写的vector容器
 
-#include "allocator.h"
-#include "base.h"
+#include "allocator.hpp"
+#include "base.hpp"
 namespace yuriSTL {
 
 template <typename T>
