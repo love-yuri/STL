@@ -5,10 +5,12 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-add_executable(SGI_STL
-        allocator.h
-        base.h
-        list.h
-        main.cpp
-        type_traits.h
-        vector.h)
+add_executable(${PROJECT_NAME}
+  allocator.h
+  base.h
+  list.h
+  type_traits.h
+  vector.h
+
+  main.cpp
+)
