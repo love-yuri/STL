@@ -6,7 +6,7 @@
 #include "base.hpp"
 namespace yuriSTL {
 
-template <typename T>
+template <typename T, typename Alloc = Allocator<T>>
 class vector final {
 public:
 	typedef T value_type;             // 数据类型别名
@@ -18,7 +18,7 @@ private:
 	value_type* begin_; // 指向一块内存的起始地址
 	value_type* end_;   // 最后一个元素的下一个位置
 	value_type* tail_;  // 内存块的最后一块地址
-	allocator<T> alloc; // 新建分配内存的工具
+	Alloc alloc; // 新建分配内存的工具
 
 	// 申请更大空间函数，默认为原来最大空间的两倍
 	void relloc() {

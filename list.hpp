@@ -12,7 +12,7 @@ struct node {
 	T* data_;        // 保存本身的数据
 };
 
-template <typename T>
+template <typename T, typename Alloc = Allocator<T>>
 class list {
 public:
 	typedef T value_type;
@@ -24,8 +24,8 @@ private:
 	node<T>* head;                 // 定义一个头节点
 	node<T>* tail;                 // 定义一个尾节点
 	size_type size;                // 保存节点个数
-	allocator<node<T>> alloc_node; // node 内存分配器
-	allocator<T> alloc_value;      // value 内存分配器
+	Allocator<node<T>> alloc_node; // node 内存分配器
+	Allocator<T> alloc_value;      // value 内存分配器
 
 public:
 	list() {

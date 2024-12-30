@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-12-30 13:41:33
- * @LastEditTime: 2024-12-30 14:10:38
+ * @LastEditTime: 2024-12-30 14:16:34
  * @Description: 内存分配器
  */
 #ifndef ALLOCATOR_H
@@ -14,14 +14,14 @@ namespace yuriSTL {
     该类实现了 容器内存的创建 分配 初始化操作
 */
 template <typename T>
-class allocator {
+class Allocator {
 public:
 	typedef T value_type; // 基础数据类型
 	typedef T* pointer;   // 基础数据指针
 
 public:
-	allocator() = default;
-	~allocator() = default;
+	Allocator() = default;
+	~Allocator() = default;
 
 	// 分配size个空间
 	static pointer allocate(size_type size) noexcept {
