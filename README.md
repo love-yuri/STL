@@ -1,19 +1,3 @@
----
-title: yuriSTL
-author: yuri2078
-avatar: https://cdn.jsdelivr.net/gh/yuri2078/images/img/custom/avatar.jpg
-authorLink: https://2078.site
-authorAbout: 恋语轻唱
-authorDesc: 恋语轻唱
-categories: c++
-comments: true
-description: 我的爱宛如孤岛之花，不为人知的绽放,不为人知的凋零！
-photos: https://cdn.jsdelivr.net/gh/yuri2078/images/headPictures/15.png
-date: 2023-01-15 20:40:13
-tags:
-keywords: 
----
-
 # 常用知识点
 
 ## 引用折叠
