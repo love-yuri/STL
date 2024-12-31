@@ -382,19 +382,19 @@ private:
 3. 更新3个指针
 
 ```c++
-	vector() noexcept
-	{
-    // 申请空间
-		begin_ = alloc.allocate(16); 
-    // 异常返回
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!"); // 以红色字体终端打印消息
-			exit(1); // 并且退出程序，错误代码1
-		}
-		// 更新指针位置
-		end_ = begin_; 
-		tail_ = begin_ + 16;
-	}
+vector() noexcept
+{
+	// 申请空间
+    begin_ = alloc.allocate(16); 
+	// 异常返回
+    if (begin_ == nullptr) {
+        yuriSTL::log("内存分配失败捏!"); // 以红色字体终端打印消息
+        exit(1); // 并且退出程序，错误代码1
+    }
+    // 更新指针位置
+    end_ = begin_; 
+    tail_ = begin_ + 16;
+}
 ```
 
 #### 拷贝构造函数
@@ -408,23 +408,23 @@ private:
 
 ```c++
 vector(vector<value_type> &v) noexcept
-	{
-		// 新建一块和他一样大的内存
+{
+    // 新建一块和他一样大的内存
     begin_ = alloc.allocate(v.max_size());
-  	// 异常判断
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
-		// 更新指针
-		const int size = v.size();
-		end_ = begin_ + size;
-		tail_ = begin_ + v.max_size();
-		// 调用构造函数进行构造
-		for (int i = 0; i < size; i++) {
-			alloc.construct(begin_ + i, *(v.begin() + i));
-		}
-	}
+    // 异常判断
+    if (begin_ == nullptr) {
+        yuriSTL::log("内存分配失败捏!");
+        exit(1);
+    }
+    // 更新指针
+    const int size = v.size();
+    end_ = begin_ + size;
+    tail_ = begin_ + v.max_size();
+    // 调用构造函数进行构造
+    for (int i = 0; i < size; i++) {
+        alloc.construct(begin_ + i, *(v.begin() + i));
+    }
+}
 ```
 
 #### 移动构造函数
@@ -436,18 +436,18 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 移动构造函数
-	vector(vector<value_type> &&v) noexcept
-	{
-		// 移动资源
-		begin_ = v.begin_;
-		end_ = v.end_;
-		tail_ = v.tail_;
+vector(vector<value_type> &&v) noexcept
+{
+    // 移动资源
+    begin_ = v.begin_;
+    end_ = v.end_;
+    tail_ = v.tail_;
 
-		// 将原来的地址设置为nullptr
-		v.begin_ = nullptr;
-		v.end_ = nullptr;
-		v.tail_ = nullptr;
-	}
+    // 将原来的地址设置为nullptr
+    v.begin_ = nullptr;
+    v.end_ = nullptr;
+    v.tail_ = nullptr;
+}
 ```
 
 #### 申请n个元素的空间
@@ -460,19 +460,18 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 使用n个对象初始化
-	explicit vector(const size_type n)
-	{
-		// 申请空间
-		begin_ = alloc.allocate(n);
-		// 异常返回
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
-		// 更新指针
-		end_ = begin_;
-		tail_ = begin_ + n;
-	}
+explicit vector(const size_type n) {
+    // 申请空间
+    begin_ = alloc.allocate(n);
+    // 异常返回
+    if (begin_ == nullptr) {
+        yuriSTL::log("内存分配失败捏!");
+        exit(1);
+    }
+    // 更新指针
+    end_ = begin_;
+    tail_ = begin_ + n;
+}
 ```
 
 #### 初始化n个元素
@@ -486,23 +485,23 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 初始化n个元素
-	vector(const size_type n, const value_type &val)
-	{
-		// 申请空间
-		begin_ = alloc.allocate(n);
-		// 异常返回
-		if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
-		// 更新指针
-		end_ = begin_ + n;
-		tail_ = begin_ + n;
-		// 初始化元素
-		for (int i = 0; i < n; i++) {
-			alloc.construct(begin_ + i, val);
-		}
-	}
+vector(const size_type n, const value_type &val)
+{
+    // 申请空间
+    begin_ = alloc.allocate(n);
+    // 异常返回
+    if (begin_ == nullptr) {
+        yuriSTL::log("内存分配失败捏!");
+        exit(1);
+    }
+    // 更新指针
+    end_ = begin_ + n;
+    tail_ = begin_ + n;
+    // 初始化元素
+    for (int i = 0; i < n; i++) {
+        alloc.construct(begin_ + i, val);
+    }
+}
 ```
 
 ### ~vector()
@@ -511,19 +510,19 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 析构函数
-	~vector() 
-	{
-		// 调用函数对类进行析构
-		alloc.destroy(begin_, end_);
-		// 删除掉申请的内存
-		if (begin_) {
-			alloc.deallocate(begin_);
-		}
-		// 将他们设置为nullptr 防止被重新利用
-		begin_ = nullptr;
-		end_ = nullptr;hu shi hua
-		tail_ = nullptr;
-	}
+~vector() 
+{
+    // 调用函数对类进行析构
+    alloc.destroy(begin_, end_);
+    // 删除掉申请的内存
+    if (begin_) {
+        alloc.deallocate(begin_);
+    }
+    // 将他们设置为nullptr 防止被重新利用
+    begin_ = nullptr;
+    end_ = nullptr;hu shi hua
+    tail_ = nullptr;
+}
 ```
 
 ### push_back
@@ -536,26 +535,24 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 从尾部插入元素 左值
-	void push_back(const value_type& val)
-	{
-		// 判断空间是不是满了
-		if (end_ == tail_) {
-			relloc(); // 如果空间满了则重新分配空间默认 大小 X 2
-		}
-		// 插入，并更新指针
-		alloc.construct(end_++, val);
-	}
+void push_back(const value_type& val) {
+    // 判断空间是不是满了
+    if (end_ == tail_) {
+        relloc(); // 如果空间满了则重新分配空间默认 大小 X 2
+    }
+    // 插入，并更新指针
+    alloc.construct(end_++, val);
+}
 
 // 从尾部插入元素 右值
-	void push_back(value_type&& val)
-	{
-		// 判断空间是不是满了
-		if (end_ == tail_) {
-			relloc();
-		}
-		// 通过完美转发传递参数
-		alloc.construct(end_++, yuriSTL::forward<value_type>(val));
-	}
+void push_back(value_type&& val) {
+    // 判断空间是不是满了
+    if (end_ == tail_) {
+        relloc();
+    }
+    // 通过完美转发传递参数
+    alloc.construct(end_++, yuriSTL::forward<value_type>(val));
+}
 ```
 
 ### size
@@ -564,9 +561,9 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 返回当前元素个数
-    const int size() {
-        return end_ - begin_;
-    }
+const int size() {
+    return end_ - begin_;
+}
 ```
 
 ### max_size
@@ -575,9 +572,9 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 返回最大元素个数
-    const int max_size() {
-        return tail_ - begin_;
-    }
+const int max_size() {
+    return tail_ - begin_;
+}
 ```
 
 ### empty
@@ -586,9 +583,9 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 判断容器是否为空
-	const bool empty() { 
-	  return end_ == begin_; 
-	}
+const bool empty() { 
+  return end_ == begin_; 
+}
 ```
 
 ### front
@@ -597,14 +594,13 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 返回首部元素
-	reference front() 
-	{
-		if (empty()) {
-			yuriSTL::log("当前元素为空!");
-			exit(3);
-		}
-		return *begin_;
-	}
+reference front() {
+    if (empty()) {
+        yuriSTL::log("当前元素为空!");
+        exit(3);
+    }
+    return *begin_;
+}
 ```
 
 ### back
@@ -613,14 +609,14 @@ vector(vector<value_type> &v) noexcept
 
 ```c++
 // 返回末尾元素
-	reference back()
-	{
-		if (empty()) {
-			yuriSTL::log("当前元素为空!");
-			exit(3);
-		}
-		return *(end_ - 1);
-	}
+reference back()
+{
+    if (empty()) {
+        yuriSTL::log("当前元素为空!");
+        exit(3);
+    }
+    return *(end_ - 1);
+}
 ```
 
 ### begin
@@ -639,9 +635,9 @@ iterator begin() noexcept {
 
 ```c++
 // 返回末尾迭代器
-	iterator end() noexcept { 
-	  return end_;
-  }
+iterator end() noexcept { 
+  return end_;
+}
 ```
 
 ### data
@@ -660,14 +656,14 @@ iterator data() noexcept {
 
 ```c++
 // 返回对应元素个数
-	reference at(const int k)
-	{
-		if (k >= end_ - begin_) {
-			yuriSTL::log("错误！超出内存范围!");
-			exit(2);
-		}
-    return *(begin_ + k);
-	}
+reference at(const int k)
+{
+    if (k >= end_ - begin_) {
+        yuriSTL::log("错误！超出内存范围!");
+        exit(2);
+    }
+	return *(begin_ + k);
+}
 ```
 
 ### operator[]
@@ -676,14 +672,14 @@ iterator data() noexcept {
 
 ```c++
 // 重载[] 返回对应下标元素
-	reference operator[](int k)
-	{
-      if (k >= end_ - begin_) {
-			  yuriSTL::log("错误！超出内存范围!");
-			  exit(2);
-      }
-      return *(begin_ + k);
-	}
+reference operator[](int k)
+{
+  if (k >= end_ - begin_) {
+          yuriSTL::log("错误！超出内存范围!");
+          exit(2);
+  }
+  return *(begin_ + k);
+}
 ```
 
 ### operator=
@@ -692,27 +688,27 @@ iterator data() noexcept {
 
 ```c++
 // 重载等号
-	reference operator=(cosnt vector<value_type> &v)
-	{
-		// 调用函数对之前的数据进行析构
-		alloc.destroy(begin_, end_);
-		// 删除掉之前申请的内存
-		alloc.deallocate(begin_);
-		// 重新申请内存
-		begin_ = alloc.allocate(v.max_size());
-		// 判断是否异常
-    if (begin_ == nullptr) {
-			yuriSTL::log("内存分配失败捏!");
-			exit(1);
-		}
-		// 更新指针
-		end_ = begin_ + v.size();
-		tail_ = begin_ + v.max_size();
-		// 完成初始化操作
-		for (int i = 0; i < v.size(); i++) {
-			*(begin_ + i) = *(v.begin_ + i);
-		}
+reference operator=(cosnt vector<value_type> &v)
+{
+    // 调用函数对之前的数据进行析构
+    alloc.destroy(begin_, end_);
+    // 删除掉之前申请的内存
+    alloc.deallocate(begin_);
+    // 重新申请内存
+    begin_ = alloc.allocate(v.max_size());
+    // 判断是否异常
+	if (begin_ == nullptr) {
+        yuriSTL::log("内存分配失败捏!");
+        exit(1);
+    }
+    // 更新指针
+    end_ = begin_ + v.size();
+    tail_ = begin_ + v.max_size();
+    // 完成初始化操作
+    for (int i = 0; i < v.size(); i++) {
+        *(begin_ + i) = *(v.begin_ + i);
+    }
 
-		return *this;
-	}
+    return *this;
+}
 ```
