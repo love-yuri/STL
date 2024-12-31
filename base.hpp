@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-12-30 13:41:33
- * @LastEditTime: 2024-12-30 15:14:57
+ * @LastEditTime: 2024-12-31 10:05:24
  * @Description: stl基础库
  */
 
@@ -26,7 +26,7 @@ enum ErrorCode {
 	STL_EMPTY = 3,    // 元素为空
 };
 
-typedef __SIZE_TYPE__ size_type; // 数据类型重新定义
+using size_type = __SIZE_TYPE__; // 数据类型重新定义
 
 /*
 move 函数 实现转换为右值引用 错误写法！
