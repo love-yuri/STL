@@ -60,7 +60,7 @@ private:
 	}
 
 	// 申请指定空间函数
-	value_type* applyMemory(const size_t&& size) {
+	value_type* applyMemory(const size_t& size) {
 		const auto v = alloc.allocate(size);
 		// 异常返回
 		if (v == nullptr) {
@@ -106,7 +106,7 @@ public:
 	}
 
 	// 使用n个对象初始化
-	explicit vector(const size_type n) {
+	explicit vector(const size_type& n) {
 		// 申请空间
 		begin_ = applyMemory(n);
 		// 初始化内容
@@ -119,7 +119,7 @@ public:
 	}
 
 	// 初始化n个元素
-	vector(const size_type n, const_reference val) {
+	vector(const size_type& n, const_reference val) {
 		// 申请空间
 		begin_ = applyMemory(n);
 		// 更新指针
