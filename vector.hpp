@@ -23,33 +23,44 @@ private:
 	value_type* tail_;  // 内存块的最后一块地址
 	Allocator<T> alloc; // 新建分配内存的工具
 
-	// 申请更大空间函数，默认为原来最大空间的两倍
 	void relloc() {
 		// 保存原来的元素个数
 		const int size = this->size();
-		yinfo << "重新分配内存, 当前size ->  " << size;
-		// 申请两倍的空间
-		value_type* new_begin = applyMemory(size * 2);
-		// 设置他新的end 和 tail 指针
-		value_type* new_end = new_begin + size;
-		value_type* new_tail = new_begin + size * 2;
+		const int new_capacity = size > 0 ? size * 2 : 1; // 至少分配 1 单元空间
+		yinfo << "重新分配内存, 当前size -> " << size;
 
-		// 循环调用移动构造函数进行构造
-		for (int i = 0; i < size; i++) {
-			alloc.construct(new_begin + i, move(*(begin_ + i)));
+		// 申请两倍空间
+		value_type* new_begin = applyMemory(new_capacity);
+
+		// 移动元素到新空间
+		int i = 0;
+		try {
+			for (; i < size; ++i) {
+				alloc.construct(new_begin + i, std::move(*(begin_ + i)));
+			}
+		} catch (...) {
+			// 异常处理，销毁已构造对象并释放内存
+			for (int j = 0; j < i; ++j) {
+				alloc.destroy(new_begin + j);
+			}
+			alloc.deallocate(new_begin);
+			throw;
 		}
-		// 将原来的内存调用析构函数进行析构 并对原内存i进行删除
-		alloc.destroy(this->begin_, this->end_);
-		alloc.deallocate(this->begin_);
+
+		// 销毁原有元素并释放原内存
+		for (auto p = begin_; p != end_; ++p) {
+			alloc.destroy(p);
+		}
+		alloc.deallocate(begin_);
 
 		// 更新指针
 		begin_ = new_begin;
-		end_ = new_end;
-		tail_ = new_tail;
+		end_ = new_begin + size;
+		tail_ = new_begin + new_capacity;
 	}
 
 	// 申请指定空间函数
-	value_type * applyMemory(const size_t&& size) {
+	value_type* applyMemory(const size_t&& size) {
 		const auto v = alloc.allocate(size);
 		// 异常返回
 		if (v == nullptr) {
@@ -153,14 +164,22 @@ public:
 		alloc.construct(end_++, yuriSTL::forward<value_type>(val));
 	}
 
+	// 弹出一个元素
+	void pop_back() noexcept {
+		if (begin_ == end_) {
+			return;
+		}
+		alloc.destroy(--end_); // 调用析构函数
+	}
+
 	// 返回当前元素个数
-	const int size() const {
-		return end_ - begin_;
+	[[nodiscard]] constexpr size_type size() const noexcept {
+		return static_cast<size_type>(end_ - begin_);
 	}
 
 	// 返回最大元素个数
-	const int capacity() const {
-		return tail_ - begin_;
+	[[nodiscard]] constexpr size_type capacity() const noexcept {
+		return static_cast<size_type>(tail_ - begin_);
 	}
 
 	// 重载[] 返回对应下标元素
