@@ -106,20 +106,20 @@ public:
 	// 展示数据
 	void showAllValue() {
 		node<T>* new_head = head;
-		yinfo << "当前容量 -> " << size;
+		log_info << "当前容量 -> " << size;
 		while (new_head->data_) {
 			if (new_head->next_->data_ == nullptr) {
-				yinfo << "tail : " << *new_head->data_;
+				log_info << "tail : " << *new_head->data_;
 				break;
 			}
 			if (new_head->front_ == nullptr) {
-				yinfo << "head : " << *new_head->data_ ;
+				log_info << "head : " << *new_head->data_;
 			} else {
-				yinfo << " front : " << *new_head->front_->data_ << "  prev : "<< *new_head->data_;
+				log_info << " front : " << *new_head->front_->data_ << "  prev : " << *new_head->data_;
 			}
 			new_head = new_head->next_;
 		}
-		yinfo << "";
+		log_info << "";
 	}
 };
 } // namespace yuriSTL

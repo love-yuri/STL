@@ -27,7 +27,7 @@ private:
 		// 保存原来的元素个数
 		const int size = this->size();
 		const int new_capacity = size > 0 ? size * 2 : 1; // 至少分配 1 单元空间
-		yinfo << "重新分配内存, 当前size -> " << size;
+		log_info << "重新分配内存, 当前size -> " << size;
 
 		// 申请两倍空间
 		value_type* new_begin = applyMemory(new_capacity);

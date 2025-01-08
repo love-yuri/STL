@@ -1,11 +1,13 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-12-30 15:27:02
- * @LastEditTime: 2024-12-31 09:37:14
+ * @LastEditTime: 2024-12-31 13:53:09
  * @Description: vector 测试
  */
-#include "../yuri_log.hpp"
+#define DEBUG_LOG
+
 #include "../vector.hpp"
+#include "../yuri_log.hpp"
 #include <algorithm>
 
 int main() {
@@ -16,18 +18,18 @@ int main() {
 
 	v[8] = 888; // 修改测试
 	// v.at(99); // 越界测试
-	yinfo << v;
-	yinfo << "size: " << v.size();
-	yinfo << "capacity: " << v.capacity();
-	yinfo << "empty: "  << v.empty();
-	yinfo << "front: " << v.front();
-	yinfo << "back: " << v.back();
+	log_info << v;
+	log_info << "size: " << v.size();
+	log_info << "capacity: " << v.capacity();
+	log_info << "empty: " << v.empty();
+	log_info << "front: " << v.front();
+	log_info << "back: " << v.back();
 
 	// 弹出测试
 
 	// 算法测试
 	std::sort(v.begin(), v.end());
-	yinfo << v;
+	log_info << v;
 
 	return 0;
 }

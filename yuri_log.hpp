@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2024-12-30 16:39:47
+ * @LastEditTime: 2025-01-08 13:37:52
  * @Description: 日志库基于c11，可写入文件
  */
 
@@ -27,7 +27,7 @@ namespace yuri {
 static std::mutex mutex;
 static bool write_in_file = false; // 是否写入文件
 
-static void logResult(const std::string& msg, std::ostream& ostream) {
+[[maybe_unused]] static void logResult(const std::string& msg, std::ostream& ostream) {
 	ostream << msg;
 	std::endl(ostream);
 }
@@ -74,6 +74,7 @@ public:
 	}
 
 	~Log() {
+		#ifdef DEBUG_LOG
 		mutex.lock();
 		if (write_in_file) {
 			try {
@@ -90,6 +91,7 @@ public:
 			logResult(ost.str(), std::cout);
 		}
 		mutex.unlock();
+		#endif
 	}
 
 	template <typename T>
@@ -128,12 +130,12 @@ public:
 };
 } // namespace yuri
 
-#ifndef yinfo
-#define yinfo ::yuri::Log(__func__, __LINE__)
+#ifndef log_info
+#define log_info ::yuri::Log(__func__, __LINE__)
 #endif
 
-#ifndef yerror
-#define yerror ::yuri::Log(__func__, __LINE__, true)
+#ifndef log_error
+#define log_error ::yuri::Log(__func__, __LINE__, true)
 #endif
 
 #endif /* ifndef YURI_LOG_HPP */
