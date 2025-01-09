@@ -4,7 +4,6 @@
 
 #include "allocator.hpp"
 #include "base.hpp"
-#include "exception.hpp"
 #include "yuri_log.hpp"
 
 namespace yuri {
@@ -12,10 +11,10 @@ namespace yuri {
 template <typename T, typename Alloc = Allocator<T>>
 class vector final {
 public:
-	typedef T value_type;             // 数据类型别名
-	typedef T* iterator;              // 指针类型 / 迭代器
-	typedef T& reference;             // 引用 只接受左值引用
-	typedef const T& const_reference; // 引用 接受左值也接受右值
+	using value_type = T;             // 数据类型别名
+	using iterator = T*;              // 指针类型 / 迭代器
+	using reference = T& ;             // 引用 只接受左值引用
+	using const_reference = const T& ; // 引用 接受左值也接受右值
 
 private:
 	value_type* begin_; // 指向一块内存的起始地址
@@ -64,7 +63,7 @@ private:
 		const auto v = alloc.allocate(size);
 		// 异常返回
 		if (v == nullptr) {
-			throw BizException("内存分配失败捏!");
+			throw std::runtime_error("内存分配失败捏!");
 		}
 		return v;
 	}
@@ -190,15 +189,23 @@ public:
 	// 返回对应元素个数
 	reference at(const int k) {
 		if (k >= end_ - begin_) {
-			throw BizException("错误, 超出下标访问范围!");
+			throw std::runtime_error("错误, 超出下标访问范围!");
 		}
 		return *(begin_ + k);
+	}
+
+	// 清空数据
+	void clear() noexcept {
+		// 循环销毁
+		alloc.destroy(begin_, end_);
+		// 重置指针
+		end_ = begin_;
 	}
 
 	// 返回首部元素
 	reference front() {
 		if (empty()) {
-			throw BizException("当前容器为空!!!");
+			throw std::runtime_error("当前容器为空!!!");
 		}
 		return *begin_;
 	}
@@ -206,7 +213,7 @@ public:
 	// 返回末尾元素
 	reference back() {
 		if (empty()) {
-			throw BizException("当前容器为空!!!");
+			throw std::runtime_error("当前容器为空!!!");
 		}
 		return *(end_ - 1);
 	}
