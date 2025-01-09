@@ -8,7 +8,7 @@
 #define ALLOCATOR_H
 
 #include "base.hpp" // 包含一下常用的函数 如 move forward
-namespace yuriSTL {
+namespace yuri {
 
 /*
     该类实现了 容器内存的创建 分配 初始化操作
@@ -57,18 +57,18 @@ public:
 	static void construct(pointer ptr, Args&&... args) noexcept {
 		// 构造类的时候可能有多个参数，这些参数可能是左值，可能是右值，所以我们需要完美转发
 		// 完美转发需要配合万能引用使用，所以Args 必须是 &&
-		::new (ptr) value_type(yuriSTL::forward<Args>(args)...);
+		::new (ptr) value_type(yuri::forward<Args>(args)...);
 	}
 
 	// 调用类的析构函数
-	static void destroy(pointer ptr) noexcept { yuriSTL::destroy(ptr); }
+	static void destroy(pointer ptr) noexcept { yuri::destroy(ptr); }
 
 	// 通过迭代器析构对象
 	static void destroy(pointer start, pointer end) noexcept {
-		yuriSTL::destroy(start, end);
+		yuri::destroy(start, end);
 	}
 };
 
-} // namespace yuriSTL
+} // namespace yuri
 
 #endif // ALLOCATOR_H

@@ -17,7 +17,7 @@
   std::is_lvalue_reference 判断是不是左值引用
 */
 
-namespace yuriSTL {
+namespace yuri {
 
 enum ErrorCode {
 	SUCCESS = 0,
@@ -92,9 +92,9 @@ void destroy(T* ptr) {
 template <typename T>
 void destroy(T* start, T* end) {
 	// 判断是不是基础类型
-	typename yuriSTL::is_type<T>::__type type;
+	typename yuri::is_type<T>::__type type;
 	// 通过另一个函数完成最终析构
 	destroy__(start, end, type);
 }
-} // namespace yuriSTL
+} // namespace yuri
 #endif // BASE_H

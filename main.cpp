@@ -62,7 +62,7 @@ ostream& operator<<(ostream& cout, Person& p) {
 }
 
 int main() {
-	yuriSTL::list<int> list;
+	yuri::list<int> list;
 	list.push_back(44);
 	list.push_back(45);
 	list.push_back(46);

@@ -1,14 +1,12 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2023-09-28 08:49:03
- * @LastEditTime: 2025-01-08 13:37:52
+ * @LastEditTime: 2025-01-08 14:19:00
  * @Description: 日志库基于c11，可写入文件
  */
 
 #ifndef YURI_LOG_HPP
 #define YURI_LOG_HPP
-
-#pragma once
 
 #include <ctime>
 #include <fstream>
@@ -100,7 +98,6 @@ public:
 		return *this;
 	}
 
-	template <>
 	Log& operator<<(bool val) {
 		ost << std::boolalpha << val;
 		return *this;

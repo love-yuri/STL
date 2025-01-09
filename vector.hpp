@@ -7,7 +7,7 @@
 #include "exception.hpp"
 #include "yuri_log.hpp"
 
-namespace yuriSTL {
+namespace yuri {
 
 template <typename T, typename Alloc = Allocator<T>>
 class vector final {
@@ -161,7 +161,7 @@ public:
 			relloc(); // 如果空间满了则重新分配空间默认 大小 X 2
 		}
 		// 通过完美转发传递参数
-		alloc.construct(end_++, yuriSTL::forward<value_type>(val));
+		alloc.construct(end_++, yuri::forward<value_type>(val));
 	}
 
 	// 弹出一个元素
@@ -244,7 +244,7 @@ public:
 
 // 重载输出，方便打印
 template <typename T>
-void operator<<(yuri::Log log, yuriSTL::vector<T>& vec) {
+void operator<<(yuri::Log log, yuri::vector<T>& vec) {
 	const int size = vec.size();
 	for (int i = 0; i < size; i++) {
 		log << vec[i] << " ";
@@ -252,5 +252,5 @@ void operator<<(yuri::Log log, yuriSTL::vector<T>& vec) {
 	log << "";
 }
 
-} // namespace yuriSTL
+} // namespace yuri
 #endif

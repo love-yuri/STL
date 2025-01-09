@@ -1,7 +1,7 @@
 /*
  * @Author: love-yuri yuri2078170658@gmail.com
  * @Date: 2024-12-30 15:27:02
- * @LastEditTime: 2024-12-31 13:53:09
+ * @LastEditTime: 2025-01-08 14:13:46
  * @Description: vector 测试
  */
 #define DEBUG_LOG
@@ -11,7 +11,7 @@
 #include <algorithm>
 
 int main() {
-	yuriSTL::vector<int> v;
+	yuri::vector<int> v;
 	for (int i = 0; i < 20; i++) {
 		v.push_back(i);
 	}

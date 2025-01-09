@@ -4,7 +4,7 @@
 #include "allocator.hpp"
 #include "yuri_log.hpp"
 
-namespace yuriSTL {
+namespace yuri {
 
 template <typename T>
 struct node {
@@ -122,6 +122,6 @@ public:
 		log_info << "";
 	}
 };
-} // namespace yuriSTL
+} // namespace yuri
 
 #endif

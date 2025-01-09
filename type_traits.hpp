@@ -2,7 +2,7 @@
 #define TYPE_TRAITS_H
 
 // 存放一些萃取模板
-namespace yuriSTL {
+namespace yuri {
 
 /*
   知识点:
@@ -139,6 +139,6 @@ struct is_type<unsigned long long> {
 	typedef __true_type __type;
 };
 // 待补充
-} // namespace yuriSTL
+} // namespace yuri
 
 #endif
